@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2022-03-25T10:23:46Z"
+  labels:
+    run: forest
+  name: forest
+  namespace: default
+  resourceVersion: "12734"
+  uid: 47887ef6-a230-4ee1-bc66-6f668c8f0181
+spec:
+  containers:
+  - image: samber/hello-world-nodejs
+    imagePullPolicy: Always
+    name: forest
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-bzl2k
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: docker-desktop
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-bzl2k
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-25T10:23:46Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-25T10:23:49Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-25T10:23:49Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-25T10:23:46Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://2584350d1b1fd0e278ea0252bd9f57b052d17c19f13e97944cdfd49b4d80db9a
+    image: samber/hello-world-nodejs:latest
+    imageID: docker-pullable://samber/hello-world-nodejs@sha256:0ef000b45d9beacc4275f6dc077f0e0c3ebc4a9d712a7da9de19dbcd0560f49f
+    lastState: {}
+    name: forest
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2022-03-25T10:23:48Z"
+  hostIP: 192.168.65.4
+  phase: Running
+  podIP: 10.1.0.49
+  podIPs:
+  - ip: 10.1.0.49
+  qosClass: BestEffort
+  startTime: "2022-03-25T10:23:46Z"

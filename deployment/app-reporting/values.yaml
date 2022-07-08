@@ -1,0 +1,27 @@
+jobs:
+  - name: cronjob
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 2000
+    image:
+      repository: ghcr.io/pakome/app-reporting
+      tag: 1.0.0
+      imagePullPolicy: Always
+    schedule: "*/10 * * * *"
+    failedJobsHistoryLimit: 1
+    successfulJobsHistoryLimit: 3
+    concurrencyPolicy: Allow
+    restartPolicy: OnFailure
+    resources:
+      limits:
+        cpu: 50m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 256Mi
+    env:
+    - name: DB_URI
+      value: user:my-password@tcp(mysql:3306)/db_host
+    - name: WEBHOOK_URL
+      value: https://epitechfr.webhook.office.com/webhookb2/82b0fd55-2620-4b2e-8484-84a34aa3c327@901cb4ca-b862-4029-9306-e5cd0f6d9f86/IncomingWebhook/9609d49a4127413381f983eed982aa5f/a93f66dc-546b-42c3-85f4-b3acb818f7fe

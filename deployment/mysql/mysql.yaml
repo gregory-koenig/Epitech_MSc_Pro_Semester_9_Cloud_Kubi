@@ -1,0 +1,7 @@
+auth:
+  database: db_host
+  username: user
+  password: my-password
+  rootPassword: rootpass
+image:
+  debug: true

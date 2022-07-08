@@ -1,0 +1,135 @@
+# Default values for kubi-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  repository: ghcr.io/pakome/app-backend
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "artisan"
+  # tag: "1.0.0"
+
+imagePullSecrets:
+- name: dockerconfigjson-github-com
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: LoadBalancer
+  port: 8000
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS, DELETE"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,X-LANG,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,X-Api-Key,X-Device-Id,Access-Control-Allow-Origin"
+  hosts:
+    - paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+secret:
+  name: kubi-api-env-secret
+#Environment variable listing
+env:
+  # non sensitive variables
+  normal:
+    # APP
+    APP_NAME: "Laravel"
+    APP_ENV: "local"
+    APP_KEY: "base64:h55oToUypq1BJwhcBAbtCnKscJGGS7xXF3zoDNf/yWE="
+    APP_DEBUG: true
+    APP_URL: "http://localhost"
+    LOG_CHANNEL: "stderr"
+    # MYSQL
+    DB_CONNECTION: "mysql"
+    DB_HOST: "mysql"
+    DB_PORT: 3306
+    # SETTINGS
+    BROADCAST_DRIVER: "log"
+    CACHE_DRIVER: "file"
+    QUEUE_CONNECTION: "sync"
+    SESSION_DRIVER: "file"
+    SESSION_LIFETIME: 120
+    # RABBITMQ
+    RABBITMQ_HOST: "rabbitmq"
+    RABBITMQ_PORT: 5672
+    #ELASTICSEARCH
+    ELASTICSEARCH_URI: "elasticsearch-master"
+    ELASTICSEARCH_HOST: "elasticsearch-master"
+    ELASTICSEARCH_PORT: 9200
+    ELASTICSEARCH_SCHEME: "http"
+
+  # sensitive variables
+  secret:
+    # MYSQL
+    DB_DATABASE: "db_host"
+    DB_USERNAME: "user"
+    DB_PASSWORD: "my-password"
+    # RABBITMQ
+    RABBITMQ_USER: "user"
+    RABBITMQ_PASSWORD: "password"
+    RABBITMQ_VHOST: "default-vhost"
+    #ELASTICSEARCH
+    # ELASTICSEARCH_USER: ""
+    # ELASTICSEARCH_PASS: ""
+
+postStartCommand: "sleep 50; while nslookup mysql; do sleep 15; done; php artisan migrate"
+# postStartCommand: "php artisan migrate"

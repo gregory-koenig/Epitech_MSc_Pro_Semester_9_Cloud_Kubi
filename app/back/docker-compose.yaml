@@ -1,0 +1,35 @@
+version: "3.5"
+services:
+    php:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: acarou/laravel-kubernetes:latest
+        restart: always
+        ports:
+            - 8000:80
+        networks:
+            - backend-network
+    # memcached:
+    #     image: memcached:alpine
+    #     container_name: memcache
+    #     restart: unless-stopped
+    #     ports:
+    #         - "11211:11211"
+    #     networks:
+    #         - backend-network
+    #     volumes:
+    #         - memcached-data:/data
+
+#Docker Networks
+networks:
+    backend-network:
+        driver: bridge
+
+volumes:
+    elasticsearch-data:
+        driver: local
+    mysql-data:
+        driver: local
+    # memcached-data:
+    #     driver: local

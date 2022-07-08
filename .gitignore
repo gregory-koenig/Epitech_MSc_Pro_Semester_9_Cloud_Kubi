@@ -36,3 +36,7 @@ nbproject/*
 .vscode
 # Sass preprocessor
 .sass-cache/
+
+# Project
+./deployment/secret.yaml
+archives-deploy/

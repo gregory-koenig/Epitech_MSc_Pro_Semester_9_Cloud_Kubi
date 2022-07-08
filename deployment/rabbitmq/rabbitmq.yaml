@@ -1,0 +1,9 @@
+auth:
+  username: user
+  password: password
+# The used vhost is default-vhost
+extraConfiguration: |-
+  default_vhost = default-vhost
+  default_permissions.configure = .*
+  default_permissions.read = .*
+  default_permissions.write = .*
